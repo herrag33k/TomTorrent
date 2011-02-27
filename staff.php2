@@ -1,0 +1,89 @@
+<?
+require "include/bittorrent.php";
+dbconn();
+stdhead("Staff");
+begin_main_frame();
+?>
+
+<? if (get_user_class() < UC_MODERATOR) {
+        begin_frame('Stjórnendur');
+$res = mysql_query("SELECT id, username, class FROM users WHERE class >= '4' ORDER by id") or sqlerr();
+   $num = 0;
+    while ($a = mysql_fetch_assoc($res))
+    {
+      ++$num;
+      print("<a href=userdetails.php?id=" . $a["id"] . "><b>" . $a["username"] .
+         "</b></a> - " . get_user_class_name($a["class"]) . " - <a href=email-gateway.php?id=". $a["id"] .">Hafa samband (Email)</a><br>");
+    }
+    end_frame();
+    } ?>
+<? if (get_user_class() >= UC_MODERATOR) { ?>
+
+<? begin_frame("Stjórnenda tól - <font color=red>Aðeins stjórnendur geta skoðað það sem hér stendur.</font>"); ?>
+
+<br>
+<table width=500 cellspacing=3>
+<tr>
+	<td class=embedded></td>
+	
+</tr>
+
+</table>
+<br>
+<br>
+<table width=500 cellspacing=10 align=center>
+<tr>
+	<td class=embedded><form method=get action=bans.php?><input type=submit value="Bönn" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=adduser.php><input type=submit value="Bæta við notanda" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=makepoll.php><input type=submit value="Búa til könnun" style='height: 20px; width: 100px'></form></td>
+</tr>
+<tr>
+	<td class=embedded><form method=get action=users.php><input type=submit value="Listi yfir notendur" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=tags.php><input type=submit value="Spjallborðs skipanir" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=smilies.php><input type=submit value="Broskallar" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=delacct.php><input type=submit value="Eyða aðgangi" style='height: 20px; width: 100px'></form></td>
+</tr>
+<tr>
+	<td class=embedded><form method=get action=stats.php><input type=submit value="Tracker Staða" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=testip.php><input type=submit value="Athuga ip" style='height: 20px; width: 100px'></form></td>
+	<td class=embedded><form method=get action=usersearch.php><input type=submit value="Leita af notanda" style='height: 20px; width: 100px'></form></td>
+</tr>
+</table>
+<br>
+<?
+    begin_frame('Notendur sem aldrei hafa skráð sig inn.');
+$res = mysql_query("SELECT id, username, skilmalar, invitari FROM users WHERE ip = '' ORDER by id desc limit 30") or sqlerr();
+   $num = 0;
+    while ($a = mysql_fetch_assoc($res))
+    {
+      ++$num;
+      print("<a href=userdetails.php?id=" . $a["id"] . "><b>" . $a["username"] .
+         "</b></a> - Invitað af: " . $a["invitari"] . "<br>");
+    }
+    end_frame();
+        begin_frame('Stjórnendur');
+$res = mysql_query("SELECT id, username, class FROM users WHERE class >= '4' ORDER by id") or sqlerr();
+   $num = 0;
+    while ($a = mysql_fetch_assoc($res))
+    {
+      ++$num;
+      print("<a href=userdetails.php?id=" . $a["id"] . "><b>" . $a["username"] .
+         "</b></a> - " . get_user_class_name($a["class"]) . " - <a href=email-gateway.php?id=". $a["id"] .">Hafa samband (Email)</a><br>");
+    }
+    end_frame();
+        begin_frame('Þeir sem ekki hafa samþykt skilmála');
+$res = mysql_query("SELECT id, username, skilmalar FROM users WHERE skilmalar = '0' ORDER by id") or sqlerr();
+   $num = 0;
+    while ($a = mysql_fetch_assoc($res))
+    {
+      ++$num;
+      print("<a href=userdetails.php?id=" . $a["id"] . "><b>" . $a["username"] .
+         "</b></a> - " . get_user_class_name($a["class"]) . "<br>");
+    }
+    end_frame();
+end_frame(); ?>
+
+<? }
+end_main_frame();
+stdfoot();
+?>

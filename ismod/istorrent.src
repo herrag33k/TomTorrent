@@ -1,0 +1,13 @@
+<search
+version="0.1.01"
+name="Is Torrent"
+description="Leita á Is Torrent"
+action="http://torrent.is/browse.php"
+searchForm="http://torrent.is/browse.php"
+method="GET"
+>
+    
+<input name="search" user="">
+<input name="cat" value="0">
+   
+</search>
